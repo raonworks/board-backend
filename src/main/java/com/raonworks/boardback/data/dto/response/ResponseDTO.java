@@ -4,6 +4,7 @@ import com.raonworks.boardback.common.ResponseCode;
 import com.raonworks.boardback.common.ResponseMessage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
