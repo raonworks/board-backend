@@ -1,9 +1,12 @@
 package com.raonworks.boardback.service.implement;
 
+import com.raonworks.boardback.data.dto.request.auth.SignInRequestDTO;
 import com.raonworks.boardback.data.dto.request.auth.SignUpRequestDTO;
 import com.raonworks.boardback.data.dto.response.ResponseDTO;
+import com.raonworks.boardback.data.dto.response.auth.SignInResponseDTO;
 import com.raonworks.boardback.data.dto.response.auth.SignUpResponseDTO;
 import com.raonworks.boardback.data.entity.UserEntity;
+import com.raonworks.boardback.provider.JwtProvider;
 import com.raonworks.boardback.repository.UserRepository;
 import com.raonworks.boardback.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +20,8 @@ import org.springframework.stereotype.Service;
 public class AuthServiceImpl implements AuthService {
 
   private final UserRepository userRepository;
-  private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+  private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+  private final JwtProvider jwtProvider;
 
   @Override
   public ResponseEntity<? super SignUpResponseDTO> signUp(SignUpRequestDTO dto) {
@@ -48,4 +52,31 @@ public class AuthServiceImpl implements AuthService {
     }
     return SignUpResponseDTO.success();
   }
+
+  @Override
+  public ResponseEntity<? super SignInResponseDTO> signIn(SignInRequestDTO dto) {
+
+    String token = null;
+
+    try {
+      String email = dto.getEmail();
+      UserEntity userEntity = userRepository.findByEmail(email);
+      if(userEntity == null) return SignInResponseDTO.SignInFailed();
+
+      String password = dto.getPassword();
+      String encodedPassword = userEntity.getPassword();
+      boolean isMatched = passwordEncoder.matches(password, encodedPassword);
+
+      if(!isMatched) return SignInResponseDTO.SignInFailed();
+
+      token = jwtProvider.create(email);
+
+    } catch(Exception e) {
+      e.printStackTrace();
+      return ResponseDTO.databaseError();
+    }
+    return SignInResponseDTO.success(token);
+  }
+
+
 }
