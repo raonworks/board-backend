@@ -24,6 +24,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
     try {
       String token = parseBearerToken(request);
       if (token == null) {
@@ -33,14 +34,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       }
 
       String email = jwtProvider.validate(token);
-      if (email != null) {
+      if (email == null) {
         //pass to next filter.(include expired date)
         filterChain.doFilter(request, response);
         return;
       }
 
       AbstractAuthenticationToken authenticationToken =
-              new UsernamePasswordAuthenticationToken(email, null, AuthorityUtils.NO_AUTHORITIES);
+        new UsernamePasswordAuthenticationToken(email, null, AuthorityUtils.NO_AUTHORITIES);
 
       authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
       SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
