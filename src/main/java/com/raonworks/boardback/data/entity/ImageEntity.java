@@ -12,7 +12,12 @@ import lombok.NoArgsConstructor;
 @Table(name = "image")
 public class ImageEntity {
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Integer sequencec;
+  private Integer sequence;
   private Integer boardNumber;
   private String image;
+
+  public ImageEntity(Integer boardNumber, String image) {
+    this.boardNumber = boardNumber;
+    this.image = image;
+  }
 }
