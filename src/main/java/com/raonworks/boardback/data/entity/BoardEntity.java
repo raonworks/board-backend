@@ -52,4 +52,12 @@ public class BoardEntity {
     this.favoriteCount--;
   }
 
+  public void increaseCommentCount() {
+    this.commentCount++;
+  }
+
+  public void decreaseCommentCount() {
+    this.commentCount--;
+  }
+
 }

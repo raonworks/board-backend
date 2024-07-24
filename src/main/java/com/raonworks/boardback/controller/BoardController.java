@@ -1,10 +1,8 @@
 package com.raonworks.boardback.controller;
 
 import com.raonworks.boardback.data.dto.request.board.PostBoardRequestDTO;
-import com.raonworks.boardback.data.dto.response.board.GetBoardResponseDTO;
-import com.raonworks.boardback.data.dto.response.board.GetFavoriteListResponseDTO;
-import com.raonworks.boardback.data.dto.response.board.PostBoardResponseDTO;
-import com.raonworks.boardback.data.dto.response.board.PutFavoriteResponseDTO;
+import com.raonworks.boardback.data.dto.request.board.PostCommentRequestDTO;
+import com.raonworks.boardback.data.dto.response.board.*;
 import com.raonworks.boardback.service.BoardService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +41,15 @@ public class BoardController {
   @GetMapping("/{boardNumber}/favorite-list")
   public ResponseEntity<? super GetFavoriteListResponseDTO> getFavoriteList(@PathVariable Integer boardNumber) {
     ResponseEntity<? super GetFavoriteListResponseDTO> response = boardService.getFavoriteList(boardNumber);
+    return response;
+  }
+
+  @PostMapping("/{boardNumber}/comment")
+  public ResponseEntity<? super PostCommentResponseDTO> postComment(
+          @RequestBody @Valid PostCommentRequestDTO dto,
+          @PathVariable Integer boardNumber,
+          @AuthenticationPrincipal String email) {
+    ResponseEntity<? super PostCommentResponseDTO> response = boardService.postComment(dto, boardNumber, email);
     return response;
   }
 

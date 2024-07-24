@@ -1,10 +1,8 @@
 package com.raonworks.boardback.service;
 
 import com.raonworks.boardback.data.dto.request.board.PostBoardRequestDTO;
-import com.raonworks.boardback.data.dto.response.board.GetBoardResponseDTO;
-import com.raonworks.boardback.data.dto.response.board.GetFavoriteListResponseDTO;
-import com.raonworks.boardback.data.dto.response.board.PostBoardResponseDTO;
-import com.raonworks.boardback.data.dto.response.board.PutFavoriteResponseDTO;
+import com.raonworks.boardback.data.dto.request.board.PostCommentRequestDTO;
+import com.raonworks.boardback.data.dto.response.board.*;
 import org.springframework.http.ResponseEntity;
 
 public interface BoardService {
@@ -12,4 +10,5 @@ public interface BoardService {
   ResponseEntity<? super PostBoardResponseDTO> postBoard(PostBoardRequestDTO dto, String email);
   ResponseEntity<? super PutFavoriteResponseDTO> putFavorite(Integer boardNum, String email);
   ResponseEntity<? super GetFavoriteListResponseDTO> getFavoriteList(Integer boardNum);
+  ResponseEntity<? super PostCommentResponseDTO> postComment(PostCommentRequestDTO dto, Integer boardNum, String email);
 }
