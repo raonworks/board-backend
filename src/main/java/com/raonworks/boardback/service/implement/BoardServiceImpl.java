@@ -10,6 +10,7 @@ import com.raonworks.boardback.data.entity.FavoriteEntity;
 import com.raonworks.boardback.data.entity.ImageEntity;
 import com.raonworks.boardback.repository.*;
 import com.raonworks.boardback.repository.resultSet.GetBoardResultSet;
+import com.raonworks.boardback.repository.resultSet.GetCommentListResultSet;
 import com.raonworks.boardback.repository.resultSet.GetFavoriteListResultSet;
 import com.raonworks.boardback.service.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -156,6 +157,25 @@ public class BoardServiceImpl implements BoardService {
 
     }
     return PostCommentResponseDTO.success();
+  }
+
+  @Override
+  public ResponseEntity<? super GetCommentListResponseDTO> getCommentList(Integer boardNum) {
+
+    List<GetCommentListResultSet> resultSets = new ArrayList<>();
+
+    try {
+
+      boolean existsBoard = boardRepository.existsByBoardNumber(boardNum);
+      if(!existsBoard) return GetCommentListResponseDTO.noExistBoard();
+
+      resultSets = commentRepository.getCommentList(boardNum);
+
+    } catch (Exception e) {
+      e.printStackTrace();
+      return ResponseDTO.databaseError();
+    }
+    return GetCommentListResponseDTO.success(resultSets);
   }
 
 }

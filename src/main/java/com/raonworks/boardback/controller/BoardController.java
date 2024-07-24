@@ -17,12 +17,7 @@ public class BoardController {
 
   private final BoardService boardService;
 
-  @GetMapping("/{boardNumber}")
-  public ResponseEntity<? super GetBoardResponseDTO> getBoard(@PathVariable Integer boardNumber) {
-    ResponseEntity<? super GetBoardResponseDTO> response = boardService.getBoard(boardNumber);
-    return response;
-  }
-
+  //게시물 등록하기
   @PostMapping("")
   public ResponseEntity<? super PostBoardResponseDTO> postBoard(
           @RequestBody @Valid PostBoardRequestDTO dto,
@@ -32,24 +27,41 @@ public class BoardController {
     return response;
   }
 
+  //게시물 가져오기
+  @GetMapping("/{boardNumber}")
+  public ResponseEntity<? super GetBoardResponseDTO> getBoard(@PathVariable Integer boardNumber) {
+    ResponseEntity<? super GetBoardResponseDTO> response = boardService.getBoard(boardNumber);
+    return response;
+  }
+
+  //좋아요 달기
   @PutMapping("/{boardNumber}/favorite")
   public ResponseEntity<? super PutFavoriteResponseDTO> putFavorite(@PathVariable Integer boardNumber, @AuthenticationPrincipal String email) {
     ResponseEntity<? super PutFavoriteResponseDTO> response = boardService.putFavorite(boardNumber, email);
     return response;
   }
 
+  //좋아요 리스트 받아오기
   @GetMapping("/{boardNumber}/favorite-list")
   public ResponseEntity<? super GetFavoriteListResponseDTO> getFavoriteList(@PathVariable Integer boardNumber) {
     ResponseEntity<? super GetFavoriteListResponseDTO> response = boardService.getFavoriteList(boardNumber);
     return response;
   }
 
+  //댓글 달기
   @PostMapping("/{boardNumber}/comment")
   public ResponseEntity<? super PostCommentResponseDTO> postComment(
           @RequestBody @Valid PostCommentRequestDTO dto,
           @PathVariable Integer boardNumber,
           @AuthenticationPrincipal String email) {
     ResponseEntity<? super PostCommentResponseDTO> response = boardService.postComment(dto, boardNumber, email);
+    return response;
+  }
+
+  //댓글 리스트 받아오기
+  @GetMapping("/{boardNumber}/comment-list")
+  public ResponseEntity<? super GetCommentListResponseDTO> getCommentList(@PathVariable Integer boardNumber) {
+    ResponseEntity<? super GetCommentListResponseDTO> response = boardService.getCommentList(boardNumber);
     return response;
   }
 
