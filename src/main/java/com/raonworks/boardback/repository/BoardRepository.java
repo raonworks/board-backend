@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 public interface BoardRepository extends JpaRepository<BoardEntity, Integer> {
 
   BoardEntity findByBoardNumber(Integer boardNumber);
+  boolean existsByBoardNumber(Integer boardNum);
 
   @Query(value =
           "SELECT" +
@@ -24,4 +25,5 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Integer> {
           "   INNER JOIN user AS U ON B.writer_email=U.email " +
           "WHERE board_number = ?1", nativeQuery = true)
   GetBoardResultSet getBoard(Integer boardNum);
+
 }
