@@ -2,6 +2,7 @@ package com.raonworks.boardback.controller;
 
 import com.raonworks.boardback.data.dto.request.board.PostBoardRequestDTO;
 import com.raonworks.boardback.data.dto.response.board.GetBoardResponseDTO;
+import com.raonworks.boardback.data.dto.response.board.GetFavoriteListResponseDTO;
 import com.raonworks.boardback.data.dto.response.board.PostBoardResponseDTO;
 import com.raonworks.boardback.data.dto.response.board.PutFavoriteResponseDTO;
 import com.raonworks.boardback.service.BoardService;
@@ -36,6 +37,12 @@ public class BoardController {
   @PutMapping("/{boardNumber}/favorite")
   public ResponseEntity<? super PutFavoriteResponseDTO> putFavorite(@PathVariable Integer boardNumber, @AuthenticationPrincipal String email) {
     ResponseEntity<? super PutFavoriteResponseDTO> response = boardService.putFavorite(boardNumber, email);
+    return response;
+  }
+
+  @GetMapping("/{boardNumber}/favorite-list")
+  public ResponseEntity<? super GetFavoriteListResponseDTO> getFavoriteList(@PathVariable Integer boardNumber) {
+    ResponseEntity<? super GetFavoriteListResponseDTO> response = boardService.getFavoriteList(boardNumber);
     return response;
   }
 
