@@ -1,7 +1,7 @@
 package com.raonworks.boardback.common;
 
 public interface ResponseMessage {
-  String SUCCESS = "SU";
+  String SUCCESS = "Success";
 
   // HTTP Status 400
   String VALIDATION_FAILED = "Validation Failed";
