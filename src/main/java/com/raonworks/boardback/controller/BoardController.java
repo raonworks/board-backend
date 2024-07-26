@@ -65,4 +65,12 @@ public class BoardController {
     return response;
   }
 
+  @GetMapping("/{boardNumber}/increase-view-count")
+  public ResponseEntity<? super InceaseViewCountResponseDTO> inceaseViewCount(
+    @PathVariable Integer boardNumber
+  ) {
+    ResponseEntity<? super InceaseViewCountResponseDTO> result = boardService.inceaseViewCount(boardNumber);
+    return result;
+  }
+
 }

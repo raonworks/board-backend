@@ -45,10 +45,10 @@ public class BoardServiceImpl implements BoardService {
       //보드 이미지 불러오기
       imageEntities = imageRepository.findByBoardNumber(boardNum);
 
-      //조회 수 증가
-      BoardEntity boardEntity = boardRepository.findByBoardNumber(boardNum);
-      boardEntity.increaseViewCount();
-      boardRepository.save(boardEntity);
+//      //조회 수 증가
+//      BoardEntity boardEntity = boardRepository.findByBoardNumber(boardNum);
+//      boardEntity.increaseViewCount();
+//      boardRepository.save(boardEntity);
 
     } catch (Exception e) {
       e.printStackTrace();
@@ -176,6 +176,24 @@ public class BoardServiceImpl implements BoardService {
       return ResponseDTO.databaseError();
     }
     return GetCommentListResponseDTO.success(resultSets);
+  }
+
+  @Override
+  public ResponseEntity<? super InceaseViewCountResponseDTO> inceaseViewCount(Integer boardNum) {
+    try {
+      //조회 수 증가
+      BoardEntity boardEntity = boardRepository.findByBoardNumber(boardNum);
+      if(null == boardEntity) return InceaseViewCountResponseDTO.noExistBoard();
+
+      boardEntity.increaseViewCount();
+      boardRepository.save(boardEntity);
+    }
+    catch(Exception e) {
+      e.printStackTrace();
+      return ResponseDTO.databaseError();
+    }
+
+    return InceaseViewCountResponseDTO.success();
   }
 
 }
