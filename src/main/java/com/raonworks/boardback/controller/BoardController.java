@@ -34,6 +34,15 @@ public class BoardController {
     return response;
   }
 
+  @DeleteMapping("/{boardNumber}")
+  public ResponseEntity<? super DeleteBoardResponseDTO> deleteBoard(
+          @PathVariable Integer boardNumber,
+          @AuthenticationPrincipal String email) {
+
+    ResponseEntity<? super DeleteBoardResponseDTO> response = boardService.deleteBoard(boardNumber, email);
+    return response;
+  }
+
   //좋아요 달기
   @PutMapping("/{boardNumber}/favorite")
   public ResponseEntity<? super PutFavoriteResponseDTO> putFavorite(@PathVariable Integer boardNumber, @AuthenticationPrincipal String email) {
@@ -65,6 +74,7 @@ public class BoardController {
     return response;
   }
 
+  //조회 카운트 증가
   @GetMapping("/{boardNumber}/increase-view-count")
   public ResponseEntity<? super InceaseViewCountResponseDTO> inceaseViewCount(
     @PathVariable Integer boardNumber

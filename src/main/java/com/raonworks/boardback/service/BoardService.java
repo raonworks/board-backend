@@ -13,4 +13,5 @@ public interface BoardService {
   ResponseEntity<? super PostCommentResponseDTO> postComment(PostCommentRequestDTO dto, Integer boardNum, String email);
   ResponseEntity<? super GetCommentListResponseDTO> getCommentList(Integer boardNum);
   ResponseEntity<? super InceaseViewCountResponseDTO> inceaseViewCount(Integer boardNum);
+  ResponseEntity<? super DeleteBoardResponseDTO> deleteBoard(Integer boardNum, String email);
 }
