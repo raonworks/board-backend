@@ -3,6 +3,8 @@ package com.raonworks.boardback.controller;
 import com.raonworks.boardback.data.dto.request.board.PostBoardRequestDTO;
 import com.raonworks.boardback.data.dto.request.board.PostCommentRequestDTO;
 import com.raonworks.boardback.data.dto.response.board.*;
+import com.raonworks.boardback.exception.AlreadyEmailExistException;
+import com.raonworks.boardback.exception.dto.ErrorResponseDTO;
 import com.raonworks.boardback.service.BoardService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,13 @@ public class BoardController {
 
     ResponseEntity<? super PostBoardResponseDTO> response = boardService.postBoard(dto, email);
     return response;
+  }
+
+  @GetMapping("/error")
+  public ResponseEntity<ErrorResponseDTO> testPage() {
+    throw new AlreadyEmailExistException();
+//    ErrorResponseDTO response = new ErrorResponseDTO("E01", "error....");
+//    return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 
   //게시물 가져오기
