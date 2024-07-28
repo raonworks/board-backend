@@ -1,9 +1,11 @@
 package com.raonworks.boardback.controller;
 
+import com.raonworks.boardback.data.dto.request.board.PatchBoardRequestDTO;
 import com.raonworks.boardback.data.dto.request.board.PostBoardRequestDTO;
 import com.raonworks.boardback.data.dto.request.board.PostCommentRequestDTO;
 import com.raonworks.boardback.data.dto.response.board.*;
-import com.raonworks.boardback.exception.AlreadyEmailExistException;
+import com.raonworks.boardback.exception.custom.AlreadyEmailExistException;
+import com.raonworks.boardback.exception.custom.NotExistsUserException;
 import com.raonworks.boardback.exception.dto.ErrorResponseDTO;
 import com.raonworks.boardback.service.BoardService;
 import jakarta.validation.Valid;
@@ -29,11 +31,10 @@ public class BoardController {
     return response;
   }
 
+  //에러 테스트
   @GetMapping("/error")
   public ResponseEntity<ErrorResponseDTO> testPage() {
-    throw new AlreadyEmailExistException();
-//    ErrorResponseDTO response = new ErrorResponseDTO("E01", "error....");
-//    return ResponseEntity.status(HttpStatus.OK).body(response);
+    throw new NotExistsUserException();
   }
 
   //게시물 가져오기
@@ -43,6 +44,7 @@ public class BoardController {
     return response;
   }
 
+  //게시물 삭제
   @DeleteMapping("/{boardNumber}")
   public ResponseEntity<? super DeleteBoardResponseDTO> deleteBoard(
           @PathVariable Integer boardNumber,
@@ -86,10 +88,21 @@ public class BoardController {
   //조회 카운트 증가
   @GetMapping("/{boardNumber}/increase-view-count")
   public ResponseEntity<? super InceaseViewCountResponseDTO> inceaseViewCount(
-    @PathVariable Integer boardNumber
+          @PathVariable Integer boardNumber
   ) {
     ResponseEntity<? super InceaseViewCountResponseDTO> result = boardService.inceaseViewCount(boardNumber);
     return result;
+  }
+
+  //
+  @PatchMapping("/{boardNumber}")
+  public ResponseEntity<? super PatchBoardResponseDTO> patchBoard(
+          @RequestBody @Valid PatchBoardRequestDTO req,
+          @PathVariable Integer boardNumber,
+          @AuthenticationPrincipal String email
+  ) {
+    ResponseEntity<? super PatchBoardResponseDTO> response = boardService.patchBoard(boardNumber, email, req);
+    return response;
   }
 
 }

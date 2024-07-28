@@ -1,5 +1,6 @@
 package com.raonworks.boardback.service;
 
+import com.raonworks.boardback.data.dto.request.board.PatchBoardRequestDTO;
 import com.raonworks.boardback.data.dto.request.board.PostBoardRequestDTO;
 import com.raonworks.boardback.data.dto.request.board.PostCommentRequestDTO;
 import com.raonworks.boardback.data.dto.response.board.*;
@@ -14,4 +15,5 @@ public interface BoardService {
   ResponseEntity<? super GetCommentListResponseDTO> getCommentList(Integer boardNum);
   ResponseEntity<? super InceaseViewCountResponseDTO> inceaseViewCount(Integer boardNum);
   ResponseEntity<? super DeleteBoardResponseDTO> deleteBoard(Integer boardNum, String email);
+  ResponseEntity<? super PatchBoardResponseDTO> patchBoard(Integer boardNum, String email, PatchBoardRequestDTO dto);
 }

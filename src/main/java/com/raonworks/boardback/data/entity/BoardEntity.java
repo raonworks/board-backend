@@ -1,5 +1,6 @@
 package com.raonworks.boardback.data.entity;
 
+import com.raonworks.boardback.data.dto.request.board.PatchBoardRequestDTO;
 import com.raonworks.boardback.data.dto.request.board.PostBoardRequestDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -58,6 +59,11 @@ public class BoardEntity {
 
   public void decreaseCommentCount() {
     this.commentCount--;
+  }
+
+  public void patchBoard(PatchBoardRequestDTO dto) {
+    this.title = dto.getTitle();
+    this.content = dto.getContent();
   }
 
 }

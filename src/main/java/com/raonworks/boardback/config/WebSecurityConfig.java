@@ -1,5 +1,7 @@
 package com.raonworks.boardback.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.raonworks.boardback.exception.ExceptionErrorCode;
 import com.raonworks.boardback.filter.JwtAuthenticationFilter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,9 +37,9 @@ public class WebSecurityConfig {
             .authorizeHttpRequests(authorize -> authorize
 //                    .requestMatchers(HttpMethod.POST, "/", "/public/**", "/api/v1/auth/**", "/api/v1/search/**", "/file/**").permitAll()  // 여기에 공개 엔드포인트를 지정하세요
 //                    .requestMatchers(HttpMethod.GET, "/", "/api/v1/board/**", "/api/v1/user/**").permitAll()
-                    .requestMatchers(HttpMethod.POST, "/**").permitAll()  // 여기에 공개 엔드포인트를 지정하세요
-                    .requestMatchers(HttpMethod.GET, "/**").permitAll()
-                    .anyRequest().authenticated()
+                            .requestMatchers(HttpMethod.POST, "/**").permitAll()  // 여기에 공개 엔드포인트를 지정하세요
+                            .requestMatchers(HttpMethod.GET, "/**").permitAll()
+                            .anyRequest().authenticated()
             )
             .exceptionHandling(handling -> handling.authenticationEntryPoint(new FailedAuthenticationEntryPoint()))
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -52,6 +54,7 @@ class FailedAuthenticationEntryPoint implements AuthenticationEntryPoint {
   public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
     response.setContentType("application/json");
     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-    response.getWriter().write("{code:NP, message: Do not have permission to access this resource.}");
+    response.getWriter().write("{'code':'" + ExceptionErrorCode.NO_PERMISSION.getCode() + "', 'message':'" + ExceptionErrorCode.NO_PERMISSION.getMessage() + "'}");
   }
+
 }

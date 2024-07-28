@@ -1,9 +1,11 @@
-package com.raonworks.boardback.common;
+package com.raonworks.boardback.exception;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-public enum ErrorCode {
+@AllArgsConstructor
+public enum ExceptionErrorCode {
   SUCCESS("SU", "Success"),
   VALIDATION_FAILED("VF", "Validation Failed"),
   DUPLICATE_EMAIL("DE", "Duplicate Email"),
@@ -25,9 +27,4 @@ public enum ErrorCode {
 
   private final String code;
   private final String message;
-
-  ErrorCode(String code, String msg) {
-    this.code = code;
-    this.message = msg;
-  }
 };

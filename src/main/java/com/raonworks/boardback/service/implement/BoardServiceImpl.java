@@ -1,5 +1,6 @@
 package com.raonworks.boardback.service.implement;
 
+import com.raonworks.boardback.data.dto.request.board.PatchBoardRequestDTO;
 import com.raonworks.boardback.data.dto.request.board.PostBoardRequestDTO;
 import com.raonworks.boardback.data.dto.request.board.PostCommentRequestDTO;
 import com.raonworks.boardback.data.dto.response.ResponseDTO;
@@ -8,6 +9,10 @@ import com.raonworks.boardback.data.entity.BoardEntity;
 import com.raonworks.boardback.data.entity.CommentEntity;
 import com.raonworks.boardback.data.entity.FavoriteEntity;
 import com.raonworks.boardback.data.entity.ImageEntity;
+import com.raonworks.boardback.exception.custom.DatabaseException;
+import com.raonworks.boardback.exception.custom.NoPermissionException;
+import com.raonworks.boardback.exception.custom.NotExistsBoardException;
+import com.raonworks.boardback.exception.custom.NotExistsUserException;
 import com.raonworks.boardback.repository.*;
 import com.raonworks.boardback.repository.resultSet.GetBoardResultSet;
 import com.raonworks.boardback.repository.resultSet.GetCommentListResultSet;
@@ -227,6 +232,33 @@ public class BoardServiceImpl implements BoardService {
       return ResponseDTO.databaseError();
     }
     return DeleteBoardResponseDTO.success();
+  }
+
+  @Override
+  public ResponseEntity<? super PatchBoardResponseDTO> patchBoard(Integer boardNum, String email, PatchBoardRequestDTO dto) {
+
+    BoardEntity boardEntity = boardRepository.findByBoardNumber(boardNum);
+    if(null == boardEntity) throw new NotExistsBoardException();
+
+    boolean existUser = userRepository.existsByEmail(email);
+    if(!existUser) throw new NotExistsUserException();
+
+    boolean sameEmail = email.equals(boardEntity.getWriterEmail());
+    if(!sameEmail) throw new NoPermissionException();
+
+    boardEntity.patchBoard(dto);
+    boardRepository.save(boardEntity);
+
+    imageRepository.deleteByBoardNumber(boardNum);
+    List<String> boardImageList = dto.getBoardImageList();
+    List<ImageEntity> imageEntities = new ArrayList<>();
+    for(String boardImage : boardImageList) {
+      ImageEntity imageEntity = new ImageEntity(boardNum, boardImage);
+      imageEntities.add(imageEntity);
+    }
+    imageRepository.saveAll(imageEntities);
+
+    return PatchBoardResponseDTO.success();
   }
 
 }
