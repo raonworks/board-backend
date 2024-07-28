@@ -26,4 +26,6 @@ public interface BoardService {
   ResponseEntity<? super PatchBoardResponseDTO> patchBoard(Integer boardNum, String email, PatchBoardRequestDTO dto);
 
   ResponseEntity<? super GetLatestBoardListResponseDTO> getLatestBoardList();
+
+  ResponseEntity<? super GetTop3BoardListResponseDTO> getTop3BoardList();
 }

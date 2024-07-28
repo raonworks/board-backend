@@ -19,7 +19,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -265,6 +269,19 @@ public class BoardServiceImpl implements BoardService {
     boardListViewEntities = boardListViewRepository.findByOrderByWriteDatetimeDesc();
 
     return GetLatestBoardListResponseDTO.suceess(boardListViewEntities);
+  }
+
+  @Override
+  public ResponseEntity<? super GetTop3BoardListResponseDTO> getTop3BoardList() {
+
+    Date beforeWeek = Date.from(Instant.now().minus(7, ChronoUnit.DAYS));
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    String sevenDaysAgo = simpleDateFormat.format(beforeWeek);
+
+    List<BoardListViewEntity> boardListViewEntities = new ArrayList<>();
+    boardListViewEntities = boardListViewRepository.findTop3ByWriteDatetimeGreaterThanOrderByFavoriteCountDescCommentCountDescViewCountDescWriteDatetimeDesc(sevenDaysAgo);
+
+    return GetTop3BoardListResponseDTO.success(boardListViewEntities);
   }
 
 }

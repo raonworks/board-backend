@@ -110,4 +110,10 @@ public class BoardController {
     return response;
   }
 
+  @GetMapping("/top-3")
+  public ResponseEntity<? super GetTop3BoardListResponseDTO> getTop3BoardList() {
+    ResponseEntity<? super GetTop3BoardListResponseDTO> response = boardService.getTop3BoardList();
+    return response;
+  }
+
 }
