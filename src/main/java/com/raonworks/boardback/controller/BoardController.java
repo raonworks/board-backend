@@ -4,7 +4,6 @@ import com.raonworks.boardback.data.dto.request.board.PatchBoardRequestDTO;
 import com.raonworks.boardback.data.dto.request.board.PostBoardRequestDTO;
 import com.raonworks.boardback.data.dto.request.board.PostCommentRequestDTO;
 import com.raonworks.boardback.data.dto.response.board.*;
-import com.raonworks.boardback.exception.custom.AlreadyEmailExistException;
 import com.raonworks.boardback.exception.custom.NotExistsUserException;
 import com.raonworks.boardback.exception.dto.ErrorResponseDTO;
 import com.raonworks.boardback.service.BoardService;
@@ -102,6 +101,12 @@ public class BoardController {
           @AuthenticationPrincipal String email
   ) {
     ResponseEntity<? super PatchBoardResponseDTO> response = boardService.patchBoard(boardNumber, email, req);
+    return response;
+  }
+
+  @GetMapping("/latest-list")
+  public ResponseEntity<? super GetLatestBoardListResponseDTO> getLatestBoardList() {
+    ResponseEntity<? super GetLatestBoardListResponseDTO> response = boardService.getLatestBoardList();
     return response;
   }
 
