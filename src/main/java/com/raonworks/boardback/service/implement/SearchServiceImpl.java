@@ -1,6 +1,8 @@
 package com.raonworks.boardback.service.implement;
 
+import com.raonworks.boardback.data.dto.response.ResponseDTO;
 import com.raonworks.boardback.data.dto.response.search.GetPopularListResponseDTO;
+import com.raonworks.boardback.exception.custom.DatabaseException;
 import com.raonworks.boardback.repository.SearchLogRepository;
 import com.raonworks.boardback.repository.resultSet.GetPopularListResultSet;
 import com.raonworks.boardback.service.SearchService;
@@ -19,9 +21,14 @@ public class SearchServiceImpl implements SearchService {
 
   @Override
   public ResponseEntity<? super GetPopularListResponseDTO> getPopularList() {
+    List<GetPopularListResultSet> resultSets;
 
-    List<GetPopularListResultSet> resultSets = new ArrayList<>();
-    resultSets = searchLogRepository.getPopularList();
+    try {
+      resultSets = searchLogRepository.getPopularList();
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new DatabaseException();
+    }
 
     return GetPopularListResponseDTO.success(resultSets);
   }

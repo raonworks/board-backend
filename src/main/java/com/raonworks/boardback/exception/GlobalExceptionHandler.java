@@ -48,6 +48,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 //    return ResponseEntity.unprocessableEntity().body(errorResponseDto);
 //  }
 
+  //데이터베이스 오류 예외처리
+  @ExceptionHandler(DatabaseException.class)
+  public ResponseEntity<Object> handleDatabaseException(DatabaseException exception, WebRequest request) {
+    log.error(exception.getMessage(), exception);
+    return buildErrorResponse(exception, HttpStatus.INTERNAL_SERVER_ERROR, ExceptionErrorCode.DATABASE_ERROR.getCode(), ExceptionErrorCode.DATABASE_ERROR.getMessage(), request);
+  }
+
   //접근권한 없음 예외처리
   @ExceptionHandler(NoPermissionException.class)
   public ResponseEntity<Object> handleNoPermissionException(NoPermissionException exception, WebRequest request) {
