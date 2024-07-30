@@ -125,4 +125,10 @@ public class BoardController {
     return response;
   }
 
+  @GetMapping("/user-board-list/{email}")
+  public ResponseEntity<? super GetUserBoardListResponseDTO> getUserBoardList(@PathVariable String email) {
+    ResponseEntity<? super GetUserBoardListResponseDTO> response = boardService.getUserBoardList(email);
+    return response;
+  }
+
 }

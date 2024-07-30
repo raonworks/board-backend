@@ -30,4 +30,6 @@ public interface BoardService {
   ResponseEntity<? super GetTop3BoardListResponseDTO> getTop3BoardList();
 
   ResponseEntity<? super GetSearchBoardListResponseDTO> getSearchBoardList(String searchWord, String preSearchWord);
+
+  ResponseEntity<? super GetUserBoardListResponseDTO> getUserBoardList(String email);
 }
