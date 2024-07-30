@@ -36,6 +36,7 @@ public class BoardServiceImpl implements BoardService {
   private final ImageRepository imageRepository;
   private final FavoriteRepository favoriteRepository;
   private final CommentRepository commentRepository;
+  private final SearchLogRepository searchLogRepository;
 
   @Override
   public ResponseEntity<? super GetBoardResponseDTO> getBoard(Integer boardNum) {
@@ -282,6 +283,30 @@ public class BoardServiceImpl implements BoardService {
     boardListViewEntities = boardListViewRepository.findTop3ByWriteDatetimeGreaterThanOrderByFavoriteCountDescCommentCountDescViewCountDescWriteDatetimeDesc(sevenDaysAgo);
 
     return GetTop3BoardListResponseDTO.success(boardListViewEntities);
+  }
+
+  @Override
+  public ResponseEntity<? super GetSearchBoardListResponseDTO> getSearchBoardList(String searchWord, String preSearchWord) {
+
+    List<BoardListViewEntity> boardListViewEntities = new ArrayList<>();
+
+    try {
+
+      boardListViewEntities = boardListViewRepository.findByTitleContainsOrContentContainsOrderByWriteDatetimeDesc(searchWord, searchWord);
+      SearchLogEntity searchLogEntity = new SearchLogEntity(searchWord, preSearchWord, false);
+      searchLogRepository.save(searchLogEntity);
+
+      boolean relation = preSearchWord != null;
+      if (relation) {
+        SearchLogEntity preSearchLogEntity = new SearchLogEntity(preSearchWord, searchWord, true);
+        searchLogRepository.save(preSearchLogEntity);
+      }
+
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new DatabaseException();
+    }
+    return GetSearchBoardListResponseDTO.success(boardListViewEntities);
   }
 
 }

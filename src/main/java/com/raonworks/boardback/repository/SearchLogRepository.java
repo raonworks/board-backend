@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface SearchLogRepository extends JpaRepository<SearchLogEntity, Integer> {
 
-  @Query("SELECT searchWord, count(searchWord) as count " +
+  @Query("SELECT searchWord as searchWord, count(searchWord) as count " +
           "FROM search_log " +
           "WHERE relation is false " +
           "GROUP BY searchWord " +

@@ -12,4 +12,6 @@ public interface BoardListViewRepository extends JpaRepository<BoardListViewEnti
 
   //특정일보다 큰 데이터 중에서 최신 3개 목록 불러오기 
   List<BoardListViewEntity> findTop3ByWriteDatetimeGreaterThanOrderByFavoriteCountDescCommentCountDescViewCountDescWriteDatetimeDesc(String WriteDatetime);
+
+  List<BoardListViewEntity> findByTitleContainsOrContentContainsOrderByWriteDatetimeDesc(String title, String content);
 }
