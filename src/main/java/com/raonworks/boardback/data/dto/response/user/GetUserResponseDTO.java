@@ -11,14 +11,14 @@ import org.springframework.http.ResponseEntity;
 public class GetUserResponseDTO extends ResponseDTO {
 
   private String email;
-  private String nickName;
+  private String nickname;
   private String profileImage;
 
   private GetUserResponseDTO(UserEntity userEntity) {
     super(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
 
     this.email = userEntity.getEmail();
-    this.nickName = userEntity.getNickname();
+    this.nickname = userEntity.getNickname();
     this.profileImage = userEntity.getProfileImage();
   }
 

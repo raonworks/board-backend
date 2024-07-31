@@ -1,6 +1,5 @@
 package com.raonworks.boardback.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.raonworks.boardback.exception.ExceptionErrorCode;
 import com.raonworks.boardback.filter.JwtAuthenticationFilter;
 import jakarta.servlet.ServletException;
@@ -12,14 +11,20 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HttpBasicConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -28,24 +33,37 @@ public class WebSecurityConfig {
   private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
   @Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http
-            .cors(cors -> cors.configure(http))
-            .csrf(AbstractHttpConfigurer::disable)
-            .httpBasic(AbstractHttpConfigurer::disable)
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(authorize -> authorize
-//                    .requestMatchers(HttpMethod.POST, "/", "/public/**", "/api/v1/auth/**", "/api/v1/search/**", "/file/**").permitAll()  // 여기에 공개 엔드포인트를 지정하세요
-//                    .requestMatchers(HttpMethod.GET, "/", "/api/v1/board/**", "/api/v1/user/**").permitAll()
-                            .requestMatchers(HttpMethod.POST, "/**").permitAll()  // 여기에 공개 엔드포인트를 지정하세요
-                            .requestMatchers(HttpMethod.GET, "/**").permitAll()
-                            .anyRequest().authenticated()
-            )
-            .exceptionHandling(handling -> handling.authenticationEntryPoint(new FailedAuthenticationEntryPoint()))
+  public SecurityFilterChain securityFilterChain(HttpSecurity http, HttpSecurity httpSecurity) throws Exception {
+
+    httpSecurity.cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            .csrf(CsrfConfigurer::disable)
+            .httpBasic(HttpBasicConfigurer::disable)
+            .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(request -> request
+                    .requestMatchers("/", "/api/v1/auth/**", "/api/v1/search/**", "/file/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/", "/api/v1/board/**", "/api/v1/user/**").permitAll()
+                    .anyRequest().authenticated())
+            .exceptionHandling(exceptionHandle -> exceptionHandle.authenticationEntryPoint(new FailedAuthenticationEntryPoint()))
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
-    return http.build();
+    return httpSecurity.build();
   }
+
+  @Bean
+  protected CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration configuration = new CorsConfiguration();
+    configuration.setAllowedOrigins(List.of("*")); // 프론트엔드 주소를 명시적으로 지정
+    configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+    configuration.addExposedHeader("*");
+    configuration.addAllowedHeader("*");
+    configuration.setAllowCredentials(false);
+
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
+
+    return source;
+  }
+
 }
 
 class FailedAuthenticationEntryPoint implements AuthenticationEntryPoint {
